@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+            About
+{% endblock %}
+
+{% block main %}
+            <div class="text-start mx-3">
+                <h2>About This Application</h2>
+                <p>
+                    <strong>SubFluent</strong> is a web-based application designed to help people improve their
+                    vocabulary by learning movie-specific terminology. Many movie watchers encounter unfamiliar words,
+                    and it can be uncomfortable. SubFluent aims to make this experience easier and more effective
+                    by allowing users to learn new words before watching a movie. This way, they can enjoy the film
+                    without being distracted by unknown terms.
+                </p>
+
+                <p>
+                    Research shows that learning vocabulary with flashcards is highly effective. With SubFluent, users
+                    can analyze movie subtitles and generate personalized <strong>Anki cards</strong> from the
+                    words they select. Users choose the words they need to learn and the application creates
+                    flashcards tailored to their needs.
+                </p>
+
+                <p>
+                    The application displays the frequency of occurrence for words and their lemmas in the subtitles.
+                    It also includes a "Lemma Rating" based on the list of 1000 most common words in U.S. English,
+                    sourced from <a href="https://gist.github.com/deekayen/4148741">deekayen/1-1000.txt</a>.
+                </p>
+
+                <p>
+                    You can use the application anonymously, but if you register and be logged in, it will track
+                    the words you've selected for your flashcards and highlight them in future sessions, making
+                    the selection of words for upcoming movies more deliberate.
+                </p>
+
+                <p>
+                    Currently, the application supports only English subtitles stored in
+                    <a href="https://wiki.x266.mov/docs/subtitles/SRT">SRT format</a>.
+                </p>
+
+                <h3>
+                    How To Use The Application
+                </h3>
+                <ol>
+                    <li>
+                        Select SRT subtitle file and upload it to the app. Once uploaded, the subtitles will be parsed,
+                        and you'll see the words of the subtitle dictionary and the words' lemmas, along with some
+                        additional stats.
+                    </li>
+                    <li>
+                        On the next page, select the words you'd like to add to your Anki deck. You can sort the words by clicking
+                        on column headers.
+                    </li>
+                    <li>
+                        Optionally, provide content for the reverse side of the flashcards.
+                    </li>
+                    <li>
+                        Edit the suggested file name and the deck name, if necessary.
+                    </li>
+                    <li>
+                        Submit your selections and download the Anki deck file. That's it! This file can be imported
+                        into both <strong>Anki Desktop</strong> and <strong>AnkiDroid</strong> apps.
+                    </li>
+                </ol>
+            </div>
+{% endblock %}

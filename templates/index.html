@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+            Home
+{% endblock %}
+
+{% block script %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Activate spinner on button click
+                const submitBtn = document.querySelector('#submitBtn');
+                const spinner = document.querySelector('#spinner');
+                submitBtn.disabled = true;
+                submitBtn.addEventListener('click', function() {
+                    spinner.classList.remove('visually-hidden');
+                });
+
+                // Check file input
+                const fileInput = document.querySelector('#fileInput');
+
+                const checkFileInput = () => {
+                    submitBtn.disabled = fileInput.files.length === 0 || fileInput.value.trim() === '';
+                }
+
+                // Enable button at pageshow if a file selected
+                window.addEventListener('pageshow', checkFileInput);
+
+                // Enable button at chagne of input field if a file selected
+                fileInput.addEventListener('change', checkFileInput);
+            })
+        </script>
+{% endblock %}
+
+{% block main %}
+            <form action="/words" method="POST" enctype="multipart/form-data">
+                <div class="input-group mb-3">
+                    <input autofocus type="file" id="fileInput" class="form-control mx-auto w-auto" name="file" accept=".srt">
+                    <button id="submitBtn" type="submit" class="btn btn-outline-primary">
+                        <span id="spinner" class="spinner-border spinner-border-sm visually-hidden" role="status" aria-hidden="true"></span>
+                        <span class="mx-1">Submit</span>
+                    </button>
+                </div>
+            </form>
+{% endblock %}

@@ -1,0 +1,5 @@
+*.apkg
+*.db
+*.srt
+__pycache__/
+flask_session/

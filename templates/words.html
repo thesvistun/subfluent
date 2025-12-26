@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block script %}
+        <script src="/static/words.js"></script>
+{% endblock %}
+
+{% block title %}
+    Words
+{% endblock %}
+
+{% block main %}
+            <div class="input-group mb-3">
+                <label for="filenameInput" class="input-group-text">File Name</label>
+                <input autofocus type="text" name="filename" id="filenameInput" class="form-control mx-auto w-auto"
+                    value="{{ filename }}" placeholder="Anki filename">
+                <label for="decknameInput" class="input-group-text">Deck Name</label>
+                <input type="text" name="deckname" id="decknameInput" class="form-control mx-auto w-auto"
+                    value="{{ deckname }}" placeholder="Anki deckname">
+                <button id="submitBtn" type="button" class="btn btn-outline-primary">
+                    <span id="spinner" class="spinner-border spinner-border-sm visually-hidden" role="status" aria-hidden="true"></span>
+                    <span class="mx-1">Submit</span>
+                </button>
+            </div>
+            <div class="input-group mb-3">
+                <label for="modelSelection" class="input-group-text">Model</label>
+                <select class="form-select" id="modelSelection">
+{% for model in models %}
+                    <option {{ 'selected' if loop.first }}>{{ model }}</option>
+{% endfor %}
+                </select>
+            </div>
+            <div id="alert-placeholder"></div>
+            <table id="words-table" class="table caption-top">
+                <caption>Dictionary</caption>
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Keep</th>
+                        <th scope="col">Word</th>
+                        <th scope="col">Word Counter</th>
+                        <th scope="col">Lemma</th>
+                        <th scope="col">Lemma Counter</th>
+                        <th scope="col">Lemma Rating</th>
+                        <th scope="col">Back</th>
+                    </tr>
+                </thead>
+                <tbody>
+    {% for item in dictionary %}
+                    <tr>
+                        <td{{ ' class=learned' if item['learned'] }}><input type="checkbox" class='form-check-input' id="cb_{{ item['word'] }}"></td>
+                        <td{{ ' class=learned' if item['learned'] }}>{{ item['word'] }}</td>
+                        <td{{ ' class=learned' if item['learned'] }}>{{ item['word_counter'] }}</td>
+                        <td{{ ' class=learned' if item['learned'] }}>{{ item['lemma'] }}</td>
+                        <td{{ ' class=learned' if item['learned'] }}>{{ item['lemma_counter'] }}</td>
+                        <td{{ ' class=learned' if item['learned'] }}>{{ item['lemma_rating'] }}</td>
+                        <td{{ ' class=learned' if item['learned'] }}><input type="text" class="form-control" id="text_{{ item['word'] }}" name="{{ item['word'] }}" disabled></td>
+                    </tr>
+    {% endfor %}
+                </tbody>
+            </table>
+{% endblock %}

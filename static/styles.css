@@ -1,0 +1,17 @@
+/* required to move copyright to the button */
+.d-flex {
+    min-height: 100vh;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    color: #4D4D4D;
+}
+
+span.error {
+    color: #B00000;
+}
+
+td.learned {
+    background-color: aquamarine;
+}
