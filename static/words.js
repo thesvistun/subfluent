@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const headerSelectedColor = 'rgb(221, 226, 231)';
     const headerPointedColor = 'rgb(186, 196, 206)';
+    let sortedAscOrder = false;
 
     // Shows alert messages
     function showAlert(message, type) {
@@ -44,31 +45,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sorting table
     const table = document.querySelector('#words-table');
     function sortTable(colIndex, table, tableHeaders) {
-        Array.from(tableHeaders).forEach(header => header.style.backgroundColor = '');
-
-        // Mark the header of sorted column
         const header = tableHeaders[colIndex];
-        header.style.backgroundColor = headerSelectedColor;
+        sortedAscOrder = (header.style.backgroundColor === headerSelectedColor) && ! sortedAscOrder;
 
         const rows = Array.from(table.rows).slice(1);
-
         rows.sort((a, b) => {
             const cellA = a.cells[colIndex].innerText;
             const cellB = b.cells[colIndex].innerText;
 
-            if (cellA === cellB) {
-                return 0;
-            }
-            const cellAInt = parseInt(cellA);
-            const cellBInt = parseInt(cellB);
-            if (Number.isInteger(cellAInt) && Number.isInteger(cellBInt)) {
-                // -1 allways bigger then any positive
-                return cellAInt === -1 || cellBInt !== -1 && cellAInt > cellBInt ? 1 : -1;
-            }
-            return cellA.localeCompare(cellB);
+            return sortedAscOrder ? compare(cellA, cellB) : compare(cellB, cellA);
         });
 
         rows.forEach(row => table.appendChild(row));
+
+        // Mark the header of sorted column
+        Array.from(tableHeaders).forEach(header => header.style.backgroundColor = '');
+        header.style.backgroundColor = headerSelectedColor;
+    }
+
+    function compare(a, b) {
+        if (a === b) {
+            return 0;
+        }
+        const aInt = parseInt(a);
+        const bInt = parseInt(b);
+        if (Number.isInteger(aInt) && Number.isInteger(bInt)) {
+            // -1 allways bigger then any positive
+            return aInt === -1 || bInt !== -1 && aInt > bInt ? 1 : -1;
+        }
+        return a.localeCompare(b);
     }
 
     const tableHeaders = table.tHead.rows[0].cells;
