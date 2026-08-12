@@ -6,13 +6,6 @@ import re
 import spacy
 import srt
 
-# reading basic 1000 words
-BASIC_WORDS_FILE_NAME = '1-1000.txt'
-basic_rated_ordered_words = []
-with open(BASIC_WORDS_FILE_NAME, 'r', encoding='utf-8') as basic_words_file:
-    basic_rated_ordered_words.extend(basic_words_file.read().split())
-
-
 def read_subs(file_content: str) -> list:
     '''
     Subtitles parser
@@ -33,7 +26,7 @@ def _get_word_rating(word: str, rated_ordered_words: list) -> int:
         rating = -1
     return rating
 
-def _add_to_dict(dictionary: dict, word: str, lemma: str):
+def _add_to_dict(dictionary: dict, word: str, lemma: str, basic_rated_ordered_words: list):
     word_found = False
     lemma_found = False
     for item in dictionary:
@@ -51,7 +44,7 @@ def _add_to_dict(dictionary: dict, word: str, lemma: str):
             'lemma_rating': lemma_rating, 'learned': False})
 
 
-def collect_subs_dict(subs: list):
+def collect_subs_dict(subs: list, basic_rated_ordered_words: list):
     '''
     Not in use. Collect words out of the subtitles without NLP
     '''
@@ -67,11 +60,11 @@ def collect_subs_dict(subs: list):
             # Remove words that contain digits
             if not sub_word or re.match(r'.*\d+.*', sub_word):
                 continue
-            _add_to_dict(subs_dictionary, sub_word, sub_word)
+            _add_to_dict(subs_dictionary, sub_word, sub_word, basic_rated_ordered_words)
     return subs_dictionary
 
 
-def collect_subs_dict_nlp(subs: list):
+def collect_subs_dict_nlp(subs: list, basic_rated_ordered_words: list):
     '''
     Collect words out of the subtitles using NLP
     '''
@@ -80,5 +73,5 @@ def collect_subs_dict_nlp(subs: list):
     nlp = spacy.load('en_core_web_sm')
     doc = nlp('\n'.join(sub.content for sub in subs))
     for item in [{'norm': token.norm_, 'lemma': token.lemma_} for token in doc if token.is_alpha]:
-        _add_to_dict(subs_dictionary, item['norm'], item['lemma'])
+        _add_to_dict(subs_dictionary, item['norm'], item['lemma'], basic_rated_ordered_words)
     return subs_dictionary

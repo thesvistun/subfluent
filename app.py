@@ -45,6 +45,12 @@ init_db_statements = [
 for statement in init_db_statements:
     db.execute(statement)
 
+# Reading basic words
+BASIC_WORDS_FILE = os.environ.get('APP_BASIC_WORDS_FILE')
+basic_rated_ordered_words = []
+with open(BASIC_WORDS_FILE, 'r', encoding='utf-8') as basic_words_file:
+    basic_rated_ordered_words.extend(basic_words_file.read().split())
+
 # Getting Ankyi's data
 anki_models = get_builtin_models()
 # Only 2 models are supported
@@ -74,7 +80,7 @@ def words():
     except SRTParseError:
         return apology('This file does not contain SRT subtitles. SRT subtitles file must be provided.')
     user_id = session.get('user_id')
-    dictionary = collect_subs_dict_nlp(subs)
+    dictionary = collect_subs_dict_nlp(subs, basic_rated_ordered_words)
     words_dicts_indicate_user_learned(dictionary, user_id, db)
     filename = file.filename
     try:
