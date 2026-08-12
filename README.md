@@ -92,28 +92,30 @@ Indented steps are alternative paths and not necessary happen.
 
 ### Project Structure
 
-- `anki.py` – **Python module** with methods for working with Anki entities.
-- `app.py` – **Python module** that runs the Flask application and serves the web UI.
-- `helper.py` – **Python module** with common utility functions.
-- `run.sh` – **Bash script** to initialize the database and start the application inside a Docker container.
-- `static/` – **Folder** with static content (e.g., images, scripts, etc.) for web pages.
-    - `styles.css` – **CSS rules** for the web pages.
-    - `words.js` – **JavaScript logic** for words.html. Was moved to a separate file due to the size of the code.
-- `subtitles.py` – **Python module** for processing subtitles.
-- `templates/` – **Folder** with **Jinja templates** for rendering HTML.
-    - `about.html` – **Template** for the About page.
-    - `apology.html` – **Template** for the web page displayed at requests' data processing errors.
-    - `change_password.html` – **Template** for the web page for changing user passwords.
-    - `index.html` – **Template** for the Home page, where users can upload subtitle files.
-    - `layout.html` – Parent **template** for all other web pages, includes common for all pages elements, e.g., the navigation bar.
-    - `login.html` – **Template** for the login page.
-    - `register.html` – **Template** for the registration page.
-    - `words.html` – **Template** for the web page that displays subtitle dictionary and user controls for selecting the words and requesting the cards.
+- `app/` - **Folder** with application files.
+    - `static/` – **Folder** with static content (e.g., images, scripts, etc.) for web pages.
+        - `styles.css` – **CSS rules** for the web pages.
+        - `words.js` – **JavaScript logic** for words.html. Was moved to a separate file due to the size of the code.
+    - `templates/` – **Folder** with **Jinja templates** for rendering HTML.
+        - `about.html` – **Template** for the About page.
+        - `apology.html` – **Template** for the web page displayed at requests' data processing errors.
+        - `change_password.html` – **Template** for the web page for changing user passwords.
+        - `index.html` – **Template** for the Home page, where users can upload subtitle files.
+        - `layout.html` – Parent **template** for all other web pages, includes common for all pages elements, e.g., the navigation bar.
+        - `login.html` – **Template** for the login page.
+        - `register.html` – **Template** for the registration page.
+        - `words.html` – **Template** for the web page that displays subtitle dictionary and user controls for selecting the words and requesting the cards.
+    - `anki.py` – **Python module** with methods for working with Anki entities.
+    - `app.py` – **Python module** that runs the Flask application and serves the web UI.
+    - `helper.py` – **Python module** with common utility functions.
+    - `subtitles.py` – **Python module** for processing subtitles.
 - `tools/` – **Folder** for third-party tools and libraries.
     - `docker/` – **Folder** for files related to Docker (e.g., Docker image).
         - `Dockerfile` – **Docker** image configuration.
         - `requirements.txt` – List of **Python dependencies**.
-- `words.db` – SQLite **database** file that stores user data. The database file is being created at the first start of the application if it's not found.
+- `run.sh` – **Bash script** to initialize the database and start the application inside a Docker container.
+- `data/` - **Folder** with the data files (present only inside the container)
+    - `words.db` – SQLite **database** file that stores user data. The database file is being created at the first start of the application if it's not found.
 
 ### Design Choices
 

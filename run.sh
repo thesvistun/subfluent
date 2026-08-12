@@ -8,18 +8,88 @@ fail() {
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
-## DB file name. Used in Python app as well.
-export APP_DB_FILE="${SCRIPT_DIR}/words.db"
+readonly IMAGE_NAME='my-python-app'
 
-## TXT file with a list of the basic words (one per line).
-export APP_BASIC_WORDS_FILE="${SCRIPT_DIR}/1-1000.txt"
+readonly CONTAINER_NAME='app'
 
-if [ ! -f "${APP_DB_FILE}" ]; then
+## DB file name.
+readonly APP_DB_FILENAME='words.db'
+
+## Basic words file name.
+readonly APP_BASIC_WORDS_FILENAME='1-1000.txt'
+
+## App directory inside a container.
+readonly CONTAINER_APP_DIR='/usr/local/share/subfluent'
+
+## App directory inside a container.
+readonly CONTAINER_APP_DATA_DIR="${CONTAINER_APP_DIR}/data"
+
+## DB file path inside a container.
+readonly CONTAINER_APP_DB_FILE="${CONTAINER_APP_DATA_DIR}/${APP_DB_FILENAME}"
+
+##  Basic words file inside a container.
+readonly CONTAINER_APP_BASIC_WORDS_FILE="${CONTAINER_APP_DATA_DIR}/${APP_BASIC_WORDS_FILENAME}"
+
+readonly VOLUME_NAME=subfluent_data
+
+create_db() {
+  [ $# -ne 1 ] && fail "Usage: create_db <db_file>"
+
+  local db_file="$1"
+
   ## Fail if sqlite3 isn't installed.
   sqlite3 --version >/dev/null 2>&1 || fail 'sqlite3 not found, but required to run this application.'
-  ## Creating default DB.
-  sqlite3 "${APP_DB_FILE}" ''
-fi
 
-docker build -t my-python-app ${SCRIPT_DIR}/tools/docker/
-docker run -it --rm -p 8080:5000 -e APP_BASIC_WORDS_FILE -e APP_DB_FILE -v ${SCRIPT_DIR}:${SCRIPT_DIR}:z -w ${SCRIPT_DIR}/app --name app my-python-app $@
+  echo "Creating DB ${db_file}"
+
+  ## Creating default DB.
+  sqlite3 "${db_file}" ''
+}
+
+init_volume() {
+  [ $# -lt 2 ] && fail "Usage: init_volume <volume_name> <file1> [file2 ...]"
+
+  local volume_name="$1"
+  shift
+  local files=("$@")
+
+  docker volume create "${volume_name}"
+
+  ## Copy data files to the volume.
+  docker create --name helper -v "${volume_name}":/data busybox
+
+  trap 'docker rm -f helper >/dev/null 2>&1 || true' RETURN
+
+  for file in "${files[@]}"; do
+    docker cp "${file}" helper:/data/
+  done
+
+  docker rm helper
+}
+
+[ -f "${SCRIPT_DIR}/${APP_DB_FILENAME}" ] || create_db "${SCRIPT_DIR}/${APP_DB_FILENAME}"
+
+FILES=(
+  "${SCRIPT_DIR}/${APP_BASIC_WORDS_FILENAME}"
+  "${SCRIPT_DIR}/${APP_DB_FILENAME}"
+)
+
+## Initializing Docker volume if doesn't exist.
+docker volume inspect "${VOLUME_NAME}" >/dev/null 2>&1 || init_volume "${VOLUME_NAME}" "${FILES[@]}"
+
+## Building Docker image with the app inside.
+docker build \
+  --build-arg CONTAINER_APP_DIR \
+  --build-arg VOLUME_NAME \
+  -t "${IMAGE_NAME}" \
+  -f "${SCRIPT_DIR}/tools/docker/Dockerfile" \
+  "${SCRIPT_DIR}"
+
+## Running the app.
+docker run -it --rm \
+  -p 8080:5000 \
+  -e APP_BASIC_WORDS_FILE="${CONTAINER_APP_BASIC_WORDS_FILE}" \
+  -e APP_DB_FILE="${CONTAINER_APP_DB_FILE}" \
+  -v "${VOLUME_NAME}":"${CONTAINER_APP_DATA_DIR}" \
+  --name "${CONTAINER_NAME}" \
+  "${IMAGE_NAME}" $@
