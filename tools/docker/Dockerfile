@@ -1,4 +1,4 @@
-FROM python:3.13-alpine
+FROM python:3.13.15-alpine
 
 ARG APP_DIR=/usr/local/share/subfluent
 
