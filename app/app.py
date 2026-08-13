@@ -53,7 +53,7 @@ for statement in init_db_statements:
     db.execute(statement)
 
 # Reading basic words
-BASIC_WORDS_FILE = os.environ.get('APP_BASIC_WORDS_FILE')
+BASIC_WORDS_FILE = os.environ.get('BASIC_WORDS_FILE')
 basic_rated_ordered_words = []
 with open(BASIC_WORDS_FILE, 'r', encoding='utf-8') as basic_words_file:
     basic_rated_ordered_words.extend(basic_words_file.read().split())

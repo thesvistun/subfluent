@@ -8,7 +8,13 @@ RUN pip install --no-cache-dir -r requirements.txt && \
     rm requirements.txt && \
     python -m spacy download en_core_web_sm
 
-COPY app/ "${APP_DIR}/app/"
+COPY app/ ${APP_DIR}/app/
+
+ARG BASIC_WORDS_FILE=${APP_DIR}/resources/1-1000.txt
+
+ENV BASIC_WORDS_FILE=$BASIC_WORDS_FILE
+
+COPY resources/1-1000.txt ${BASIC_WORDS_FILE}
 
 WORKDIR ${APP_DIR}/app
 

@@ -109,6 +109,8 @@ Indented steps are alternative paths and not necessary happen.
     - `app.py` – **Python module** that runs the Flask application and serves the web UI.
     - `helper.py` – **Python module** with common utility functions.
     - `subtitles.py` – **Python module** for processing subtitles.
+- `resources/` - **Folder** for resources.
+    - `1-1000.txt` - **Text file** with basic words. The words are ordered - the upper word is the most basic.
 - `tools/` – **Folder** for third-party tools and libraries.
     - `docker/` – **Folder** for files related to Docker (e.g., Docker image).
         - `Dockerfile` – **Docker** image configuration.

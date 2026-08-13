@@ -15,9 +15,6 @@ readonly CONTAINER_NAME='app'
 ## DB file name.
 readonly APP_DB_FILENAME='words.db'
 
-## Basic words file name.
-readonly APP_BASIC_WORDS_FILENAME='1-1000.txt'
-
 ## App directory inside a container.
 readonly CONTAINER_APP_DIR='/usr/local/share/subfluent'
 
@@ -27,13 +24,10 @@ readonly CONTAINER_APP_DATA_DIR="${CONTAINER_APP_DIR}/data"
 ## DB file path inside a container.
 readonly CONTAINER_APP_DB_FILE="${CONTAINER_APP_DATA_DIR}/${APP_DB_FILENAME}"
 
-##  Basic words file inside a container.
-readonly CONTAINER_APP_BASIC_WORDS_FILE="${CONTAINER_APP_DATA_DIR}/${APP_BASIC_WORDS_FILENAME}"
-
 readonly VOLUME_NAME=subfluent_data
 
 init_volume() {
-  [ $# -lt 2 ] && fail "Usage: init_volume <volume_name> <file1> [file2 ...]"
+  [ $# -lt 1 ] && fail "Usage: init_volume <volume_name> [file ...]"
 
   local volume_name="$1"
   shift
@@ -53,17 +47,12 @@ init_volume() {
   docker rm helper
 }
 
-FILES=(
-  "${SCRIPT_DIR}/${APP_BASIC_WORDS_FILENAME}"
-)
-
 ## Initializing Docker volume if doesn't exist.
-docker volume inspect "${VOLUME_NAME}" >/dev/null 2>&1 || init_volume "${VOLUME_NAME}" "${FILES[@]}"
+docker volume inspect "${VOLUME_NAME}" >/dev/null 2>&1 || init_volume "${VOLUME_NAME}"
 
 ## Building Docker image with the app inside.
 docker build \
-  --build-arg CONTAINER_APP_DIR \
-  --build-arg VOLUME_NAME \
+  --build-arg APP_DIR="${CONTAINER_APP_DIR}" \
   -t "${IMAGE_NAME}" \
   -f "${SCRIPT_DIR}/tools/docker/Dockerfile" \
   "${SCRIPT_DIR}"
@@ -71,7 +60,6 @@ docker build \
 ## Running the app.
 docker run -it --rm \
   -p 8080:5000 \
-  -e APP_BASIC_WORDS_FILE="${CONTAINER_APP_BASIC_WORDS_FILE}" \
   -e DB_FILE="${CONTAINER_APP_DB_FILE}" \
   -v "${VOLUME_NAME}":"${CONTAINER_APP_DATA_DIR}" \
   --name "${CONTAINER_NAME}" \
