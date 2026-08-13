@@ -24,7 +24,7 @@ Go to the repository folder.
 
 `cd subfluent`
 
-Run the application with provided in `run.sh` scripts. **Docker** is required to be installed and run on your machine to run the script. **SQLite** is required to be installed in case the database file isn't provided.
+Run the application with provided in `run.sh` scripts. **Docker** is required to be installed and run on your machine to run the script.
 
 `./run.sh`
 
@@ -113,7 +113,7 @@ Indented steps are alternative paths and not necessary happen.
     - `docker/` – **Folder** for files related to Docker (e.g., Docker image).
         - `Dockerfile` – **Docker** image configuration.
         - `requirements.txt` – List of **Python dependencies**.
-- `run.sh` – **Bash script** to initialize the database and start the application inside a Docker container.
+- `run.sh` – **Bash script** to start the application inside a Docker container.
 - `data/` - **Folder** with the data files (present only inside the container)
     - `words.db` – SQLite **database** file that stores user data. The database file is being created at the first start of the application if it's not found.
 

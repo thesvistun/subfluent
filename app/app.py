@@ -4,6 +4,8 @@ Web UI module.
 
 import os
 import tempfile
+import sqlite3
+from pathlib import Path
 from cs50 import SQL
 from flask import Flask, flash, render_template, request, send_file, jsonify, session, redirect
 from srt import SRTParseError
@@ -21,9 +23,14 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 Session(app)
 
-# Configure CS50 Library to use SQLite database
-DB_FILE = os.environ.get('APP_DB_FILE')
-db = SQL(f"sqlite:///{DB_FILE}")
+# Initializing DB. Creating if not present.
+DB_FILE = os.environ.get('DB_FILE')
+db_path = Path(DB_FILE)
+db_path.parent.mkdir(parents=True, exist_ok=True)
+if not db_path.exists():
+    conn = sqlite3.connect(db_path)
+    conn.close
+db = SQL(f"sqlite:///{db_path}")
 
 init_db_statements = [
     """CREATE TABLE IF NOT EXISTS users

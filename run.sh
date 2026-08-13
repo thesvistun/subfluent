@@ -32,20 +32,6 @@ readonly CONTAINER_APP_BASIC_WORDS_FILE="${CONTAINER_APP_DATA_DIR}/${APP_BASIC_W
 
 readonly VOLUME_NAME=subfluent_data
 
-create_db() {
-  [ $# -ne 1 ] && fail "Usage: create_db <db_file>"
-
-  local db_file="$1"
-
-  ## Fail if sqlite3 isn't installed.
-  sqlite3 --version >/dev/null 2>&1 || fail 'sqlite3 not found, but required to run this application.'
-
-  echo "Creating DB ${db_file}"
-
-  ## Creating default DB.
-  sqlite3 "${db_file}" ''
-}
-
 init_volume() {
   [ $# -lt 2 ] && fail "Usage: init_volume <volume_name> <file1> [file2 ...]"
 
@@ -67,11 +53,8 @@ init_volume() {
   docker rm helper
 }
 
-[ -f "${SCRIPT_DIR}/${APP_DB_FILENAME}" ] || create_db "${SCRIPT_DIR}/${APP_DB_FILENAME}"
-
 FILES=(
   "${SCRIPT_DIR}/${APP_BASIC_WORDS_FILENAME}"
-  "${SCRIPT_DIR}/${APP_DB_FILENAME}"
 )
 
 ## Initializing Docker volume if doesn't exist.
@@ -89,7 +72,7 @@ docker build \
 docker run -it --rm \
   -p 8080:5000 \
   -e APP_BASIC_WORDS_FILE="${CONTAINER_APP_BASIC_WORDS_FILE}" \
-  -e APP_DB_FILE="${CONTAINER_APP_DB_FILE}" \
+  -e DB_FILE="${CONTAINER_APP_DB_FILE}" \
   -v "${VOLUME_NAME}":"${CONTAINER_APP_DATA_DIR}" \
   --name "${CONTAINER_NAME}" \
   "${IMAGE_NAME}" $@
