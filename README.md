@@ -16,6 +16,8 @@ Currently, the application supports only English subtitles in [SRT format](https
 
 ### How to Run
 
+#### Common
+
 Clone this repository to the machine that are chosen to run this application.
 
 `git clone git@github.com:thesvistun/subfluent.git`
@@ -24,13 +26,41 @@ Go to the repository folder.
 
 `cd subfluent`
 
-Run the application with provided in `run.sh` scripts. **Docker** is required to be installed and run on your machine to run the script.
+#### Run in Docker
 
-`./run.sh`
+Run the application with provided in `./run-in-docker.sh` scripts. **Docker** is required to be installed and run on your machine to run the script.
+
+`./run-in-docker.sh`
 
 After the application starts, the web UI will be available on TCP port 8080.
 
 `<web-browser-app> http://localhost:8080`
+
+#### Run in kind
+
+Create a Kubernetes cluster and deploy a Docker registry to it with `kind-with-registry.sh` script. [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) is required to be installed and run on your machine to run the script.
+
+`kind-with-registry.sh`
+
+After the cluster is initialized and the Docker registry pod is up, you are ready to start up the application.
+
+`run-in-kind.sh`
+
+Then forward ports with the command below:
+
+`kubectl port-forward services/service 8080:http`
+
+After the application starts and the port is forwarded, the web UI will be available on TCP port 8080.
+
+`<web-browser-app> http://localhost:8080`
+
+##### Stopping
+
+To stop service run the command:
+
+`helm uninstall <release>`
+
+`<release>` defined in file `run-in-kind.sh` in constant `RELEASE_NAME`
 
 ### How to Use
 
@@ -115,7 +145,8 @@ Indented steps are alternative paths and not necessary happen.
     - `docker/` – **Folder** for files related to Docker (e.g., Docker image).
         - `Dockerfile` – **Docker** image configuration.
         - `requirements.txt` – List of **Python dependencies**.
-- `run.sh` – **Bash script** to start the application inside a Docker container.
+- `run-in-docker.sh` – **Bash script** to start the application inside a Docker container.
+- `run-in-kind.sh` – **Bash script** to start the application inside a kind's cluster.
 - `data/` - **Folder** with the data files (present only inside the container)
     - `words.db` – SQLite **database** file that stores user data. The database file is being created at the first start of the application if it's not found.
 

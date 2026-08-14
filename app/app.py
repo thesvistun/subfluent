@@ -26,7 +26,6 @@ Session(app)
 # Initializing DB. Creating if not present.
 DB_FILE = os.environ.get('DB_FILE')
 db_path = Path(DB_FILE)
-db_path.parent.mkdir(parents=True, exist_ok=True)
 if not db_path.exists():
     conn = sqlite3.connect(db_path)
     conn.close

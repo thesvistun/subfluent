@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Values.appName }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+    spec:
+      containers:
+      - name: app
+        image: "{{ .Values.imageRegistry }}/subfluent:{{ .Values.dockerTag }}"
+        env:
+        - name: DB_FILE
+          value: "/usr/local/share/{{ .Values.appName }}/data/words.db"
+        ports:
+        - containerPort: 5000
+          name: {{ .Values.appPortName }}
+        volumeMounts:
+        - mountPath: "/usr/local/share/{{ .Values.appName }}/data"
+          name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}
