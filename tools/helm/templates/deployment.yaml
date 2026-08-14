@@ -19,7 +19,7 @@ spec:
         image: "{{ .Values.imageRegistry }}/subfluent:{{ .Values.dockerTag }}"
         env:
         - name: DB_FILE
-          value: "/usr/local/share/{{ .Values.appName }}/data/words.db"
+          value: "/usr/local/share/{{ .Values.appName }}/data/subfluent.db"
         ports:
         - containerPort: 5000
           name: {{ .Values.appPortName }}

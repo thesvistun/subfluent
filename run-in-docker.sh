@@ -13,7 +13,7 @@ readonly IMAGE_NAME='my-python-app'
 readonly CONTAINER_NAME='app'
 
 ## DB file name.
-readonly APP_DB_FILENAME='words.db'
+readonly APP_DB_FILENAME='subfluent.db'
 
 ## App directory inside a container.
 readonly CONTAINER_APP_DIR='/usr/local/share/subfluent'

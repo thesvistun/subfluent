@@ -148,7 +148,7 @@ Indented steps are alternative paths and not necessary happen.
 - `run-in-docker.sh` – **Bash script** to start the application inside a Docker container.
 - `run-in-kind.sh` – **Bash script** to start the application inside a kind's cluster.
 - `data/` - **Folder** with the data files (present only inside the container)
-    - `words.db` – SQLite **database** file that stores user data. The database file is being created at the first start of the application if it's not found.
+    - `subfluent.db` – SQLite **database** file that stores user data. The database file is being created at the first start of the application if it's not found.
 
 ### Design Choices
 
