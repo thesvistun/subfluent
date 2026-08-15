@@ -1,6 +1,6 @@
 appName: subfluent
 imageRegistry: "localhost:5001"
-dockerTag: "latest"
+dockerTag: ""
 configMapName: configmap
 appPortName: http
 replicaCount: 1

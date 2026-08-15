@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: "{{ .Values.imageRegistry }}/subfluent:{{ .Values.dockerTag }}"
+        image: "{{ .Values.imageRegistry }}/subfluent:{{ default .Chart.AppVersion .Values.dockerTag }}"
         env:
         - name: DB_FILE
           value: "/usr/local/share/{{ .Values.appName }}/data/subfluent.db"
