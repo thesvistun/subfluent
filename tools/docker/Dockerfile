@@ -1,5 +1,7 @@
 FROM python:3.13.15-alpine
 
+LABEL org.opencontainers.image.source https://github.com/thesvistun/subfluent
+
 ARG VERSION=dev
 
 ARG APP_DIR=/usr/local/share/subfluent
