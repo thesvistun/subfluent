@@ -19,7 +19,7 @@ data "aws_ami" "amazon_linux" {
 
   filter {
     name   = "block-device-mapping.volume-size"
-    values = ["2"]
+    values = ["8"]
   }
 
   filter {
@@ -42,13 +42,32 @@ module "vpc" {
   enable_nat_gateway = false
 }
 
-resource "aws_security_group" "subfluent" {
-  name   = "subfluent"
+resource "aws_security_group" "ssh" {
+  name   = "ssh"
   vpc_id = module.vpc.vpc_id
 
   ingress {
     from_port   = 22
     to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.user_ip}/32"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "subfluent" {
+  name   = "subfluent"
+  vpc_id = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["${var.user_ip}/32"]
   }
@@ -73,7 +92,7 @@ module "web" {
 
   subnet_id = module.vpc.public_subnets[0]
 
-  security_group_ids = [aws_security_group.subfluent.id]
+  security_group_ids = [aws_security_group.ssh.id, aws_security_group.subfluent.id]
 
   key_name = data.aws_key_pair.default.key_name
 
