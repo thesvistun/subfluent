@@ -1,0 +1,41 @@
+---
+- name: Deploy SubFluent
+  hosts: subfluent
+  remote_user: ec2-user
+  become: true
+
+  tasks:
+  - name: Ensure Docker service installed
+    ansible.builtin.dnf:
+      name: docker
+      state: present
+
+  - name: Ensure app folder exists
+    ansible.builtin.file:
+      path: /usr/local/share/subfluent/app
+      state: directory
+      mode: '755'
+      recurse: true
+
+  - name: Ensuring Docker service enabled
+    ansible.builtin.systemd_service:
+      name: docker.service
+      state: started
+      enabled: true
+
+  - name: Ensure Docker volume subfluent_data exists
+    community.docker.docker_volume:
+      name: subfluent_data
+
+  - name: Run Docker container
+    community.docker.docker_container:
+      name: subfluent
+      image: ghcr.io/thesvistun/subfluent:1.0.0-1-g8f334a0
+      volumes:
+      - subfluent_data:/usr/local/share/subfluent/data
+      ports:
+      - 8080:5000
+      env:
+        DB_FILE: /usr/local/share/subfluent/data/subfluent.db
+      restart_policy: "unless-stopped"
+    

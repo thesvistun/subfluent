@@ -98,3 +98,18 @@ module "web" {
 
   name = "subfluent"
 }
+
+data "ansible_inventory" "inventory" {
+  group {
+    name = "subfluent"
+
+    host {
+      name = module.web.instance_hostname
+    }
+  }
+}
+
+resource "local_file" "inventory" {
+  content  = jsonencode(jsondecode(data.ansible_inventory.inventory.json))
+  filename = "inventory.yaml"
+}
