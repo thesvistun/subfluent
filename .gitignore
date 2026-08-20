@@ -1,14 +1,5 @@
+## Anki deck files
 *.apkg
-*.db
+
+## Subtitle files
 *.srt
-__pycache__/
-flask_session/
-
-# Local .terraform directories
-.terraform/
-
-# .tfstate files
-*.tfstate
-*.tfstate.*
-
-.terraform.lock.hcl
