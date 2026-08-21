@@ -8,7 +8,7 @@ readonly TERRAFORM_DIR="${SCRIPT_DIR}/tools/terraform"
 export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=
 export AWS_REGION=
-export TF_VAR_user_ip=$(curl -s https://api.myip.com | jq -r .ip)
+export TF_VAR_user_ip=$(curl -fs https://api.ipify.org)
 
 docker run -it --rm \
   -u $(id -u):$(id -g) \
