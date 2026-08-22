@@ -22,3 +22,8 @@ variable "name" {
   type = string
   description = "Instance tag name"
 }
+
+variable "iam_instance_profile_name" {
+  type = string
+  description = "IAM instance profile name"
+}

@@ -84,11 +84,62 @@ data "aws_key_pair" "default" {
   key_name = "default"
 }
 
+## CloudWatch
+
+module "log_group" {
+  source  = "terraform-aws-modules/cloudwatch/aws//modules/log-group"
+  version = "~> 3.0"
+
+  name              = "subfluent"
+  retention_in_days = 7
+}
+
+module "log_stream" {
+  source  = "terraform-aws-modules/cloudwatch/aws//modules/log-stream"
+  version = "~> 3.0"
+
+  name           = "subfluent"
+  log_group_name = "subfluent"
+}
+
+## IAM Role
+
+resource "aws_iam_role" "cloudwatch" {
+  name = "cloudwatch"
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_attachment" {
+  role       = aws_iam_role.cloudwatch.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+}
+
+resource "aws_iam_instance_profile" "subfluent_profile" {
+  name = "subfluent_profile"
+  role = aws_iam_role.cloudwatch.name
+}
+
 module "web" {
   source = "./modules/ec2"
 
   ami           = data.aws_ami.amazon_linux.id
   instance_type = "t3.micro"
+
+  iam_instance_profile_name = aws_iam_instance_profile.subfluent_profile.name
 
   subnet_id = module.vpc.public_subnets[0]
 
