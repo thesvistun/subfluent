@@ -3,6 +3,8 @@
   hosts: subfluent
   remote_user: ec2-user
   become: true
+  vars_files:
+    - vars.yaml
 
   tasks:
   - name: Ensure Docker service installed
@@ -12,7 +14,7 @@
 
   - name: Ensure app folder exists
     ansible.builtin.file:
-      path: /usr/local/share/subfluent/app
+      path: "{{ app_path }}/app"
       state: directory
       mode: '755'
       recurse: true
@@ -25,17 +27,16 @@
 
   - name: Ensure Docker volume subfluent_data exists
     community.docker.docker_volume:
-      name: subfluent_data
+      name: "{{ volume_name }}"
 
   - name: Run Docker container
     community.docker.docker_container:
-      name: subfluent
-      image: ghcr.io/thesvistun/subfluent:1.0.0-1-g8f334a0
+      name: "{{ container_name }}"
+      image: "{{ image_name }}:{{ image_tag }}"
       volumes:
-      - subfluent_data:/usr/local/share/subfluent/data
+      - "{{ volume_name }}:{{ app_data_path }}"
       ports:
-      - 8080:5000
+      - "{{ app_external_port }}:{{ app_inner_port }}"
       env:
-        DB_FILE: /usr/local/share/subfluent/data/subfluent.db
+        DB_FILE: "{{ app_data_path }}/subfluent.db"
       restart_policy: "unless-stopped"
-    

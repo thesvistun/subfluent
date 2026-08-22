@@ -1,0 +1,11 @@
+---
+app_name: subfluent
+app_path: "/usr/local/share/{{ app_name }}"
+app_data_path: "{{ app_path }}/data"
+volume_name: "{{ app_name }}_data"
+container_name: "{{ app_name }}"
+container_registry: ghcr.io
+image_name: "{{ container_registry }}/thesvistun/{{ app_name }}"
+image_tag: 1.0.0-1-g8f334a0
+app_inner_port: 5000
+app_external_port: 8080
