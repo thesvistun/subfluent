@@ -159,6 +159,6 @@ data "ansible_inventory" "inventory" {
 }
 
 resource "local_file" "inventory" {
-  content  = jsonencode(jsondecode(data.ansible_inventory.inventory.json))
+  content  = yamlencode(jsondecode(data.ansible_inventory.inventory.json))
   filename = "inventory.yaml"
 }
