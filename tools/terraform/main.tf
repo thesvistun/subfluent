@@ -86,20 +86,14 @@ data "aws_key_pair" "default" {
 
 ## CloudWatch
 
-module "log_group" {
-  source  = "terraform-aws-modules/cloudwatch/aws//modules/log-group"
-  version = "~> 3.0"
-
+resource "aws_cloudwatch_log_group" "subfluent" {
   name              = "subfluent"
   retention_in_days = 7
 }
 
-module "log_stream" {
-  source  = "terraform-aws-modules/cloudwatch/aws//modules/log-stream"
-  version = "~> 3.0"
-
+resource "aws_cloudwatch_log_stream" "subfluent" {
   name           = "subfluent"
-  log_group_name = "subfluent"
+  log_group_name = aws_cloudwatch_log_group.subfluent.name
 }
 
 ## IAM Role
@@ -156,6 +150,10 @@ data "ansible_inventory" "inventory" {
 
     host {
       name = module.web.instance_hostname
+    }
+    vars = {
+      aws_cw_group_name  = aws_cloudwatch_log_group.subfluent.name
+      aws_cw_stream_name = aws_cloudwatch_log_stream.subfluent.name
     }
   }
 }

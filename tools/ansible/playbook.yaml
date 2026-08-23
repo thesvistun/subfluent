@@ -42,6 +42,5 @@
       restart_policy: "unless-stopped"
       log_driver: awslogs
       log_options:
-        awslogs-region: "{{ aws_region }}"
         awslogs-group: "{{ aws_cw_group_name }}"
         awslogs-stream: "{{ aws_cw_stream_name }}"
