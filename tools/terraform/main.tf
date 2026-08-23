@@ -28,6 +28,10 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "6.6.1"
@@ -35,7 +39,7 @@ module "vpc" {
   name = "subfluent"
   cidr = "10.0.0.0/16"
 
-  azs             = ["eu-north-1a"]
+  azs             = [data.aws_availability_zones.available.names[0]]
   private_subnets = ["10.0.1.0/24"]
   public_subnets  = ["10.0.2.0/24"]
 
