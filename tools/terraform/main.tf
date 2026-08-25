@@ -39,9 +39,9 @@ module "vpc" {
   name = "subfluent"
   cidr = "10.0.0.0/16"
 
-  azs             = [data.aws_availability_zones.available.names[0]]
-  private_subnets = ["10.0.1.0/24"]
-  public_subnets  = ["10.0.2.0/24"]
+  azs             = slice(data.aws_availability_zones.available.names, 0, 2)
+  public_subnets  = ["10.0.1.0/24", "10.0.3.0/24"]
+  private_subnets = ["10.0.2.0/24", "10.0.4.0/24"]
 
   enable_nat_gateway = false
 }
@@ -67,6 +67,25 @@ resource "aws_security_group" "ssh" {
 
 resource "aws_security_group" "subfluent" {
   name   = "subfluent"
+  vpc_id = module.vpc.vpc_id
+
+  ingress {
+    from_port       = 5000
+    to_port         = 5000
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "alb" {
+  name   = "alb"
   vpc_id = module.vpc.vpc_id
 
   ingress {
@@ -147,6 +166,44 @@ module "web" {
 
   name = "subfluent"
 }
+
+## ALB ###################################################
+
+resource "aws_lb" "subfluent" {
+  name               = "subfluent"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb.id]
+  subnets            = module.vpc.public_subnets
+}
+
+resource "aws_lb_target_group" "subfluent" {
+  name     = "subfluent"
+  port     = 5000
+  protocol = "HTTP"
+  vpc_id   = module.vpc.vpc_id
+}
+
+resource "aws_lb_target_group_attachment" "subfluent" {
+  target_group_arn = aws_lb_target_group.subfluent.arn
+  target_id        = module.web.instance_id
+  depends_on = [
+    aws_lb_target_group.subfluent,
+    module.web,
+  ]
+}
+
+resource "aws_lb_listener" "subfluent" {
+  load_balancer_arn = aws_lb.subfluent.arn
+  port              = 8080
+  protocol          = "HTTP"
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.subfluent.arn
+  }
+}
+
+## Ansible Inventory #####################################
 
 data "ansible_inventory" "inventory" {
   group {
