@@ -1,5 +1,5 @@
 appName: subfluent
-imageRegistry: "localhost:5001"
+imageRegistry: "ghcr.io"
 dockerTag: ""
 configMapName: configmap
 appPortName: http

@@ -38,9 +38,9 @@ After the application starts, the web UI will be available on TCP port 8080.
 
 #### Run in kind
 
-Create a Kubernetes cluster and deploy a Docker registry to it with `kind-with-registry.sh` script. [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) is required to be installed and run on your machine to run the script.
+Create a Kubernetes cluster using kind
 
-`kind-with-registry.sh`
+`kind create cluster`
 
 After the cluster is initialized and the Docker registry pod is up, you are ready to start up the application.
 
