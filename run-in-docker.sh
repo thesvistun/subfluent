@@ -6,13 +6,46 @@ fail() {
   exit 1
 }
 
+help() {
+  echo "Usage: $0 [--dev] [--help]"
+  echo "--dev  Build the Docker images before running it. Otherwise the image from ghcr.io registry is used."
+  echo "--help Output this help"
+  exit 0
+}
+
+build_image() {
+  docker build \
+    --build-arg VERSION="${APP_VERSION}" \
+    --build-arg APP_DIR="${CONTAINER_APP_DIR}" \
+    -t "${IMAGE_NAME}:${APP_VERSION}" \
+    -f "${SCRIPT_DIR}/tools/docker/Dockerfile" \
+    "${SCRIPT_DIR}"
+}
+
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
-readonly APP_VERSION="$(git describe --tag)"
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --dev)
+      echo "Development mode is activated."
+      DEV_MODE=yes
+      shift
+      ;;
+    --help)
+      help
+      ;;
+    --*)
+      fail "Unknown option $1"
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
 
-readonly IMAGE_NAME='my-python-app'
+readonly BASE_IMAGE_NAME='thesvistun/subfluent'
 
-readonly CONTAINER_NAME='app'
+readonly CONTAINER_NAME='subfluent'
 
 ## DB file name.
 readonly APP_DB_FILENAME='subfluent.db'
@@ -52,13 +85,15 @@ init_volume() {
 ## Initializing Docker volume if doesn't exist.
 docker volume inspect "${VOLUME_NAME}" >/dev/null 2>&1 || init_volume "${VOLUME_NAME}"
 
-## Building Docker image with the app inside.
-docker build \
-  --build-arg VERSION="${APP_VERSION}" \
-  --build-arg APP_DIR="${CONTAINER_APP_DIR}" \
-  -t "${IMAGE_NAME}:${APP_VERSION}" \
-  -f "${SCRIPT_DIR}/tools/docker/Dockerfile" \
-  "${SCRIPT_DIR}"
+if [[ "${DEV_MODE}" == "yes" ]]; then
+  readonly APP_VERSION="$(git describe --tag)"
+  readonly IMAGE_NAME="${BASE_IMAGE_NAME}"
+  ## Building Docker image with the app inside.
+  build_image
+else
+  readonly APP_VERSION="$(git describe --tag --no-abbrev)"
+  readonly IMAGE_NAME="ghcr.io/${BASE_IMAGE_NAME}"
+fi
 
 ## Running the app.
 docker run -it --rm \
@@ -66,4 +101,4 @@ docker run -it --rm \
   -e DB_FILE="${CONTAINER_APP_DB_FILE}" \
   -v "${VOLUME_NAME}":"${CONTAINER_APP_DATA_DIR}" \
   --name "${CONTAINER_NAME}" \
-  "${IMAGE_NAME}:${APP_VERSION}" $@
+  "${IMAGE_NAME}:${APP_VERSION}"

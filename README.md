@@ -32,9 +32,22 @@ Run the application with provided in `./run-in-docker.sh` scripts. **Docker** is
 
 `./run-in-docker.sh`
 
+Run with `--help` option to see all available options.
+
 After the application starts, the web UI will be available on TCP port 8080.
 
 `<web-browser-app> http://localhost:8080`
+
+
+##### Stopping
+
+To stop the container run
+
+`docker stop subfluent`
+
+To remove the container run
+
+`docker rm subfluent`
 
 #### Run in kind
 
