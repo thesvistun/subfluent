@@ -26,6 +26,13 @@ spec:
         volumeMounts:
         - mountPath: "/usr/local/share/{{ .Values.appName }}/data"
           name: data
+        resources:
+          requests:
+            cpu: "1000m"
+            memory: "700Mi"
+          limits:
+            cpu: "2000m"
+            memory: "1000Mi"
       volumes:
       - name: data
         persistentVolumeClaim:
