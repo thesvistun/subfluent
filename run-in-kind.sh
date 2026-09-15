@@ -7,7 +7,7 @@ readonly RELEASE_NAME="subfluent"
 
 readonly NAMESPACE="subfluent"
 
-helm install \
+helm upgrade --install \
   --namespace "${NAMESPACE}" --create-namespace \
   --set dockerTag="${APP_VERSION}" \
   "${RELEASE_NAME}" \
