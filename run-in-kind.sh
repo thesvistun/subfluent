@@ -3,6 +3,12 @@ set -e
 
 readonly APP_VERSION="$(git describe --tags --no-abbrev)"
 
-readonly RELEASE_NAME="stage"
+readonly RELEASE_NAME="subfluent"
 
-helm install --set dockerTag="${APP_VERSION}" "${RELEASE_NAME}" tools/helm
+readonly NAMESPACE="subfluent"
+
+helm install \
+  --namespace "${NAMESPACE}" --create-namespace \
+  --set dockerTag="${APP_VERSION}" \
+  "${RELEASE_NAME}" \
+  tools/helm
