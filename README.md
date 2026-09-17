@@ -28,6 +28,8 @@ Go to the repository folder.
 
 #### Run in Docker
 
+##### Locally
+
 Run the application with provided in `./run-in-docker.sh` scripts. **Docker** is required to be installed and run on your machine to run the script.
 
 `./run-in-docker.sh`
@@ -39,7 +41,7 @@ After the application starts, the web UI will be available on TCP port 8080.
 `<web-browser-app> http://localhost:8080`
 
 
-##### Stopping
+###### Stopping
 
 To stop the container run
 
@@ -48,6 +50,20 @@ To stop the container run
 To remove the container run
 
 `docker rm subfluent`
+
+##### Within local VM
+
+Provision infrastructure using Vagrant. Go to ./tools/vagrant directory and run:
+
+`vagrant up`
+
+Then the application will be available through `http://<vm_ip>:5000`
+
+###### Destroying
+
+To destroy the VM run
+
+`vagrant destroy`
 
 #### Run in kind
 
@@ -85,7 +101,7 @@ Provision infrastructure using Terraform.
 
 Deploy SubFluent to the infrastructure using Ansible playbook.
 
-`run-ansible.sh`
+`run-ansible-aws.sh`
 
 After the application starts and the port is forwarded, the web UI will be available on TCP port 8080.
 

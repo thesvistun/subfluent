@@ -1,0 +1,6 @@
+---
+- name: Deploy SubFluent
+  hosts: subfluent
+  become: true
+  roles:
+  - docker

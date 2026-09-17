@@ -1,0 +1,38 @@
+---
+- name: Load OS distribution variables
+  include_vars: "{{ ansible_distribution }}.yaml"
+
+- name: Install system packages
+  include_tasks: "pkg-install-{{ ansible_distribution }}.yaml"
+
+- name: Ensure app folder exists
+  ansible.builtin.file:
+    path: "{{ app_path }}/app"
+    state: directory
+    mode: '755'
+    recurse: true
+
+- name: Ensuring Docker service enabled
+  ansible.builtin.systemd_service:
+    name: docker.service
+    state: started
+    enabled: true
+
+- name: Ensure Docker volume subfluent_data exists
+  community.docker.docker_volume:
+    name: "{{ volume_name }}"
+
+- name: Run Docker container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ image_name }}:{{ image_tag }}"
+    volumes:
+    - "{{ volume_name }}:{{ app_data_path }}"
+    ports:
+    - "{{ app_external_port }}:{{ app_inner_port }}"
+    env:
+      DB_FILE: "{{ app_data_path }}/subfluent.db"
+    restart_policy: "unless-stopped"
+    log_driver: "{{ log_driver }}"
+    log_options:
+      "{{ log_options }}"

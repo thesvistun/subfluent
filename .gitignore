@@ -3,3 +3,6 @@
 
 ## Subtitle files
 *.srt
+
+## Vagrant files
+.vagrant/

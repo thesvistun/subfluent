@@ -1,0 +1,5 @@
+---
+- name: Ensure Docker service installed
+  ansible.builtin.dnf:
+    name: docker
+    state: present

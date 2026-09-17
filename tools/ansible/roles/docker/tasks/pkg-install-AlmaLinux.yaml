@@ -1,0 +1,15 @@
+---
+- name: Add Docker CE repository
+  ansible.builtin.yum_repository:
+    name: docker-ce-stable
+    description: Docker CE Stable
+    baseurl: "https://download.docker.com/linux/centos/$releasever/$basearch/stable"
+    gpgcheck: true
+    gpgkey: "https://download.docker.com/linux/centos/gpg"
+    enabled: true
+
+- name: Ensure Docker service installed
+  ansible.builtin.dnf:
+    name: docker-ce
+    state: present
+  
