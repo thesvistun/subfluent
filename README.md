@@ -101,14 +101,13 @@ Provision infrastructure using Terraform.
 
 Deploy SubFluent to the infrastructure using Ansible playbook.
 
-`run-ansible-aws.sh`
+`run-ansible-aws.sh [--private-key <path>]`
 
-After the application starts and the port is forwarded, the web UI will be available on TCP port 8080.
+After the application started and the port is forwarded, the web UI will be available on TCP port 8080.
 
-`<web-browser-app> http://<ec2_instance_public_hostname>:8080`
+`<web-browser-app> http://<alb_hostname>:8080`
 
-`<ec2_instanse_public_hostname>` can be found in `run-terraform.sh apply` output or in `tools/terraform/inventory.yaml` file.
-
+`<alb_hostname>` can be found in `run-terraform.sh apply|show` output.
 
 ##### Destroying
 
