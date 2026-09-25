@@ -5,12 +5,18 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+
+ANSIBLE_DIR = "../ansible"
+K3S_PLAYBOOK = "k3s.yaml"
+DOCKER_PLAYBOOK = "docker.yaml"
+NODE_IP = "192.168.56.101"
+
 Vagrant.configure("2") do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-  config.vm.hostname = "k3s"
+  config.vm.hostname = "subfluent"
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
@@ -36,11 +42,12 @@ Vagrant.configure("2") do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: NODE_IP
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  config.vm.network "public_network"
+  # config.vm.network "public_network"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -53,14 +60,14 @@ Vagrant.configure("2") do |config|
   # by making sure your Vagrantfile isn't accessible to the vagrant box.
   # If you use this you may want to enable additional shared subfolders as
   # shown above.
-  # config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder ".", "/vagrant", disabled: false
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "k3s"
+    vb.name = "subfluent"
     # Display the VirtualBox GUI when booting the machine
     # vb.gui = true
   
@@ -82,13 +89,29 @@ Vagrant.configure("2") do |config|
 
   #
   # Run Ansible from the Vagrant Host
-  #
+
+  playbook = ENV.fetch("PLAYBOOK", DOCKER_PLAYBOOK)
 
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "../ansible/docker.yaml"
-    ansible.groups = {
-      "subfluent" => ["default"]
-    }
-  end
+    ansible.playbook = "#{ANSIBLE_DIR}/#{playbook}"
+    ansible.config_file = "../../ansible.cfg"
 
+    ansible.groups = {
+      "subfluent" => ["default"],
+    }
+
+    if playbook == K3S_PLAYBOOK
+      ansible.groups["server"] = ["default"]
+      ansible.groups["k3s_cluster:children"] = ["server"]
+
+      ansible.extra_vars = {
+        k3s_version: "v1.37.0+k3s1",
+        api_endpoint: NODE_IP,
+        # Required for vagrant ansible provisioner
+        token: "vagrant",
+        # Required to use the private network configured above
+        extra_server_args: "--node-external-ip #{NODE_IP} --flannel-iface eth1",
+      }
+    end
+  end
 end

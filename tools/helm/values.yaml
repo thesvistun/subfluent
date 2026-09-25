@@ -4,3 +4,5 @@ dockerTag: ""
 configMapName: configmap
 appPortName: http
 replicaCount: 1
+## Storage class 'standard' is available in kind
+storageClassName: standard

@@ -1,0 +1,12 @@
+---
+- name: Deploy SubFluent
+  kubernetes.core.helm:
+    name: subfluent
+    chart_ref: ../helm
+    release_namespace: subfluent
+    create_namespace: true
+    values:
+      dockerTag: "{{ image_tag }}"
+      storageClassName: "{{ storage_class_name }}"
+  become: false
+  delegate_to: 127.0.0.1

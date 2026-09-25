@@ -2,3 +2,15 @@
 collections:
 - name: community.docker
   version: "==5.2.2"
+
+- name: https://github.com/k3s-io/k3s-ansible.git
+  type: git
+  version: 1.2.2
+
+## Required by k3s role
+- name: ansible.utils
+  version: "==6.1.0"
+
+## Helm module is in use in k3s role
+- name: kubernetes.core
+  version: "==6.5.0"

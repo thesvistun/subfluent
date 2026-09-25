@@ -53,7 +53,7 @@ To remove the container run
 
 ##### Within local VM
 
-Provision infrastructure using Vagrant. Go to ./tools/vagrant directory and run:
+Provision infrastructure using Vagrant. Go to `./tools/vagrant` directory and run:
 
 `vagrant up`
 
@@ -65,7 +65,7 @@ To destroy the VM run
 
 `vagrant destroy`
 
-#### Run in kind
+#### Run in kind cluster
 
 Create a Kubernetes cluster using kind
 
@@ -90,6 +90,21 @@ To stop service run the command:
 `helm uninstall <release>`
 
 `<release>` defined in file `run-in-kind.sh` in constant `RELEASE_NAME`
+
+#### Run in k3s cluster within a local VM
+
+Provision infrastructure using Vagrant. Go to `./tools/vagrant` directory and run:
+
+`PLAYBOOK=k3s.yaml vagrant up`
+
+Then the application will be available through `http://<cluster_ip>:8080` but within k3s cluster network only.
+
+##### Destroying
+
+To destroy the VM run
+
+`vagrant destroy`
+
 
 #### Run in AWS
 
