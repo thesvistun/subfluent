@@ -1,0 +1,15 @@
+---
+- name: Install Docker apt key
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: "{{ docker_asc_file }}"
+
+- name: Add Docker repository into sources list
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64 signed-by={{ docker_asc_file }}] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+
+- name: Ensure Docker service installed
+  ansible.builtin.package:
+    name: docker-ce
+    state: present
