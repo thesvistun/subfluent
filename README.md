@@ -26,9 +26,7 @@ Go to the repository folder.
 
 `cd subfluent`
 
-#### Run in Docker
-
-##### Locally
+#### Run in a container locally
 
 Run the application with provided in `./run-in-docker.sh` scripts. **Docker** is required to be installed and run on your machine to run the script.
 
@@ -40,8 +38,7 @@ After the application starts, the web UI will be available on TCP port 8080.
 
 `<web-browser-app> http://localhost:8080`
 
-
-###### Stopping
+##### Stopping
 
 To stop the container run
 
@@ -51,7 +48,7 @@ To remove the container run
 
 `docker rm subfluent`
 
-##### Within local VM
+#### Run in a container on a VirtualBox VM
 
 Provision infrastructure using Vagrant. Go to `./tools/vagrant` directory and run:
 
@@ -59,13 +56,13 @@ Provision infrastructure using Vagrant. Go to `./tools/vagrant` directory and ru
 
 Then the application will be available through `http://<vm_ip>:5000`
 
-###### Destroying
+##### Destroying
 
 To destroy the VM run
 
 `vagrant destroy`
 
-#### Run in kind cluster
+#### Run in a kind cluster locally
 
 Create a Kubernetes cluster using kind
 
@@ -91,7 +88,7 @@ To stop service run the command:
 
 `<release>` defined in file `run-in-kind.sh` in constant `RELEASE_NAME`
 
-#### Run in k3s cluster within a local VM
+#### Run in a k3s cluster on a VirtualBox VM
 
 Provision infrastructure using Vagrant. Go to `./tools/vagrant` directory and run:
 
@@ -104,7 +101,6 @@ Then the application will be available through `http://<cluster_ip>:8080` but wi
 To destroy the VM run
 
 `vagrant destroy`
-
 
 #### Run in AWS
 
