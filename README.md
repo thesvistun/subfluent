@@ -50,6 +50,8 @@ To remove the container run
 
 #### Run in a container on a VirtualBox VM
 
+[VirtualBox](https://www.virtualbox.org/) and [Vagrant](https://developer.hashicorp.com/vagrant) is required to be installed locally.
+
 Provision infrastructure using Vagrant. Go to `./tools/vagrant` directory and run:
 
 `vagrant up`
@@ -89,6 +91,8 @@ To stop service run the command:
 `<release>` defined in file `run-in-kind.sh` in constant `RELEASE_NAME`
 
 #### Run in a k3s cluster on a VirtualBox VM
+
+[VirtualBox](https://www.virtualbox.org/), [Vagrant](https://developer.hashicorp.com/vagrant) and [Helm](https://helm.sh/) is required to be installed locally.
 
 Provision infrastructure using Vagrant. Go to `./tools/vagrant` directory and run:
 
