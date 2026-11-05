@@ -52,9 +52,9 @@ To remove the container run
 
 [VirtualBox](https://www.virtualbox.org/) and [Vagrant](https://developer.hashicorp.com/vagrant) is required to be installed locally.
 
-Provision infrastructure using Vagrant. Go to `./tools/vagrant` directory and run:
+To provision the infrastructure run:
 
-`vagrant up`
+`./run-in-vm.sh`
 
 Then the application will be available through `http://<vm_ip>:5000`
 
@@ -94,9 +94,9 @@ To stop service run the command:
 
 [VirtualBox](https://www.virtualbox.org/), [Vagrant](https://developer.hashicorp.com/vagrant) and [Helm](https://helm.sh/) is required to be installed locally.
 
-Provision infrastructure using Vagrant. Go to `./tools/vagrant` directory and run:
+To provision the infrastructure run:
 
-`PLAYBOOK=k3s.yaml vagrant up`
+`./run-in-vm.sh --playbook k3s.yaml`
 
 Then the application will be available through `http://<cluster_ip>:8080` but within k3s cluster network only.
 
