@@ -98,7 +98,7 @@ To provision the infrastructure run:
 
 `./run-in-vm.sh --playbook k3s.yaml`
 
-Then the application will be available through `http://<cluster_ip>:8080` but within k3s cluster network only.
+Then the application will be available through `http://<host>`.
 
 ##### Destroying
 
