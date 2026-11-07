@@ -4,8 +4,13 @@ metadata:
   name: {{ .Release.Name }}
 spec:
   ingressClassName: traefik
+  tls:
+  - hosts:
+      - {{ .Values.tls.hostname }}
+    secretName: subfluent
   rules:
-  - http:
+  - host: {{ .Values.tls.hostname }}
+    http:
       paths:
       - path: /
         pathType: Prefix

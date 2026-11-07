@@ -4,5 +4,8 @@
 ## Subtitle files
 *.srt
 
+## TLS files
+/tools/tls/
+
 ## Vagrant files
 .vagrant/

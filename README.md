@@ -72,7 +72,9 @@ Create a Kubernetes cluster using kind
 
 After the cluster is initialized and the Docker registry pod is up, you are ready to start up the application.
 
-`run-in-kind.sh`
+`run-in-kind.sh --tls-hostname <example.host.name>`
+
+NOTE. HTTPS (TLS) support has only been tested with K3S running in VMs (see this case below)
 
 Then forward ports with the command below:
 
@@ -94,11 +96,21 @@ To stop service run the command:
 
 [VirtualBox](https://www.virtualbox.org/), [Vagrant](https://developer.hashicorp.com/vagrant) and [Helm](https://helm.sh/) is required to be installed locally.
 
+Put your TLS certificate (tls.cer) and private key (tls.key) to <repo_dir>/tools/tls directory.
+
+These self-signed certificate and private key can be easily generated with openssl. To do this run:
+
+`openssl req -x509 -newkey rsa:2048 -keyout tls.key -out tls.crt -days 365 -nodes`
+
+Fill in required information including the TLS hostname <example.host.name> (in 'Common Name' field) during generating the certificate and key
+
 To provision the infrastructure run:
 
-`./run-in-vm.sh --playbook k3s.yaml`
+`./run-in-vm.sh --playbook k3s.yaml --tls-hostname <example.host.name>`
 
-Then the application will be available through `http://<host>`.
+Map this VM's IP to <example.host.name> TLS hostname.
+
+Then the application will be available through `https://<example.host.name>`.
 
 ##### Destroying
 

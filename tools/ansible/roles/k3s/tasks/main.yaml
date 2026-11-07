@@ -1,12 +1,44 @@
 ---
+- name: Require tls_hostname
+  ansible.builtin.fail:
+    msg: "Required variables 'tls_hostname' is missing"
+  when: tls_hostname | string | trim == ''
+
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: subfluent
+    api_version: v1
+    kind: Namespace
+    state: present
+  become: false
+  delegate_to: 127.0.0.1
+
+- name: Create TLS Secret
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: subfluent
+        namespace: subfluent
+      type: kubernetes.io/tls
+      stringData:
+        tls.crt: "{{ lookup('ansible.builtin.file', '../../tools/tls/tls.crt') }}"
+        tls.key: "{{ lookup('ansible.builtin.file', '../../tools/tls/tls.key') }}"
+  no_log: true
+  become: false
+  delegate_to: 127.0.0.1
+
 - name: Deploy SubFluent
   kubernetes.core.helm:
     name: subfluent
     chart_ref: ../helm
     release_namespace: subfluent
-    create_namespace: true
     values:
       dockerTag: "{{ image_tag }}"
       storageClassName: "{{ storage_class_name }}"
+      tls:
+        hostname: "{{ tls_hostname }}"
   become: false
   delegate_to: 127.0.0.1

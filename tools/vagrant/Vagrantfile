@@ -104,6 +104,8 @@ Vagrant.configure("2") do |config|
       ansible.groups["server"] = ["default"]
       ansible.groups["k3s_cluster:children"] = ["server"]
 
+      tls_hostname = ENV.fetch("TLS_HOSTNAME")
+
       ansible.extra_vars = {
         k3s_version: "v1.37.0+k3s1",
         api_endpoint: NODE_IP,
@@ -111,6 +113,7 @@ Vagrant.configure("2") do |config|
         token: "vagrant",
         # Required to use the private network configured above
         extra_server_args: "--node-external-ip #{NODE_IP} --flannel-iface eth1",
+        tls_hostname: tls_hostname,
       }
     end
   end
