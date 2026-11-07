@@ -60,7 +60,7 @@ Then the application will be available through `http://<vm_ip>:5000`
 
 ##### Destroying
 
-To destroy the VM run
+To destroy the VM run this from inside <repo_dir>/tools/vagrant
 
 `vagrant destroy`
 
@@ -102,7 +102,7 @@ Then the application will be available through `http://<host>`.
 
 ##### Destroying
 
-To destroy the VM run
+To destroy the VM run this from inside <repo_dir>/tools/vagrant
 
 `vagrant destroy`
 
