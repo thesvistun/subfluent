@@ -9,7 +9,7 @@ fail() {
 help() {
   echo "Usage: $0 --tls-hostname <example.host.name> [--playbook] [--help]"
   echo "--tls-hostname  hostname which the TLS certificate was issued to."
-  echo "--playbook      Ansible playbook filename to provision infrastracture."
+  echo "--playbook      Ansible playbook filename to provision infrastracture. Default: docker.yaml."
   echo "--install-deps  Install dependencies: Ansible and Python modules."
   echo "--help          Output this help"
   exit 0
